@@ -1,0 +1,25 @@
+{
+  "customers": [
+    {
+      "id": "1",
+      "name": "Anurag",
+      "city": "knp"
+    },
+    {
+      "id": "2",
+      "name": "k update",
+      "city": "l update"
+    },
+    {
+      "id": "3",
+      "name": "uttu updated",
+      "city": "knp updated"
+    },
+    {
+      "id": "4",
+      "name": "ed",
+      "city": "ff"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

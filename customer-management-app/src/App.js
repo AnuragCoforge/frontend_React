@@ -1,28 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ListCustomers from "./Component/ListCustomers";
 import AddCustomer from "./Component/AddCustomer";
 import UpdateCustomer from "./Component/UpdateCustomer";
 import CustomerInfo from "./Component/CustomerInfo";
-import Customer from "./models/Customer";
+import api from "./services/api";
 
 function App() {
-  const [customers, setCustomers] = useState([
-    new Customer(10, "Swapna", "hyd"),
-    new Customer(11, "Anurag", "knp"),
-    new Customer(12, "Khushboo", "lko"),
-  ]);
+  const [customers, setCustomers] = useState([]);
 
-  const deleteCustomer = (id) => {
-    setCustomers(customers.filter(c => c.id !== id));
+
+  const loadCustomers = () => {
+    api.getAllCustomers()
+      .then(res => setCustomers(res.data))
+      .catch(err => console.error(err));
   };
 
-  const updateCustomer = (updatedCustomer) => {
-    setCustomers(
-      customers.map(c =>
-        c.id === updatedCustomer.id ? updatedCustomer : c
-      )
-    );
+
+  useEffect(() => {
+    loadCustomers();
+  }, []);
+
+  
+  const deleteCustomer = (id) => {
+    api.deleteCustomer(id)
+      .then(() => loadCustomers())
+      .catch(err => console.error(err));
+  };
+
+
+  const updateCustomer = (id, customer) => {
+    api.updateCustomer(id, customer)
+      .then(() => loadCustomers())
+      .catch(err => console.error(err));
   };
 
   return (
@@ -38,10 +48,7 @@ function App() {
           }
         />
 
-        <Route
-          path="/add"
-          element={<AddCustomer customers={customers} setCustomers={setCustomers} />}
-        />
+        <Route path="/add" element={<AddCustomer />} />
 
         <Route
           path="/update/:id"

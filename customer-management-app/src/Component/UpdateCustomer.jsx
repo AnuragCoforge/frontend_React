@@ -1,19 +1,37 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function UpdateCustomer({ customers, onUpdate }) {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const customer = customers.find(c => c.id === Number(id));
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
 
-  const [name, setName] = useState(customer.name);
-  const [city, setCity] = useState(customer.city);
+  useEffect(() => {
+    const customer = customers.find(c => c.id === Number(id));
+    if (customer) {
+      setName(customer.name);
+      setCity(customer.city);
+    }
+  }, [customers, id]);
+
 
   const handleUpdate = () => {
-    onUpdate({ ...customer, name, city });
+    const updatedCustomer = {
+      id: Number(id), 
+      name,
+      city
+    };
+
+    onUpdate(Number(id), updatedCustomer); 
     navigate("/");
   };
+
+ 
+  if (!customers.length) {
+    return <h3 className="mt-4">Loading...</h3>;
+  }
 
   return (
     <div className="container mt-4">
